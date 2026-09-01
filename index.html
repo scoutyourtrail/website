@@ -1,0 +1,858 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScoutyourTrail Recon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap">
+
+<style>
+:root{
+  --bg:#FFFFFF; --panel:#F7F7F4; --panel-2:#F0F0EB; --card:#FFFFFF;
+  --ink:#15171C; --ink-soft:#666B73; --ink-faint:#9AA0A6;
+  --line:#E9E9E3; --line-strong:#DEDED6;
+  --accent:#FF5A22; --accent-press:#E9490F; --accent-soft:#FFF1EA; --on-accent:#FFFFFF;
+  --good:#1F9D57;
+  --shadow-s:0 1px 2px rgba(21,23,28,.05),0 4px 14px rgba(21,23,28,.05);
+  --shadow-m:0 2px 6px rgba(21,23,28,.06),0 18px 44px rgba(21,23,28,.10);
+  --r:16px; --r-s:12px; --maxw:1160px;
+  --f:"Hanken Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+h1,h2,h3,h4{margin:0;line-height:1.08;letter-spacing:-.02em;text-wrap:balance;font-weight:800}
+p{margin:0}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{font-weight:700;font-size:13px;letter-spacing:.02em;color:var(--accent)}
+.tnum{font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-soft)}
+
+/* nav */
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:20px;height:66px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.02em;white-space:nowrap}
+.brand .mark{width:26px;height:26px;flex:0 0 auto}
+.brand b{color:var(--accent);font-weight:800}
+nav.main{display:flex;gap:2px;margin:0 auto}
+nav.main a{font-weight:600;font-size:14.5px;color:var(--ink-soft);padding:8px 14px;border-radius:9px;transition:.16s}
+nav.main a:hover,nav.main a.active{color:var(--ink);background:var(--panel)}
+.ctrls{display:flex;align-items:center;gap:10px}
+.seg{display:flex;border:1px solid var(--line-strong);border-radius:9px;overflow:hidden}
+.seg button{font-family:var(--f);font-weight:700;font-size:12.5px;padding:7px 10px;border:0;background:transparent;color:var(--ink-soft);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.burger{display:none;width:38px;height:38px;place-items:center;border:1px solid var(--line-strong);border-radius:9px;background:transparent;color:var(--ink);cursor:pointer}
+.burger svg{width:18px;height:18px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-family:var(--f);
+  font-weight:700;font-size:14.5px;padding:11px 18px;border-radius:10px;border:1px solid transparent;transition:transform .12s,background .15s,border-color .15s}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-primary:hover{background:var(--accent-press)}
+.btn-soft{background:var(--ink);color:#fff}
+.btn-soft:hover{opacity:.9}
+.btn-ghost{background:var(--bg);color:var(--ink);border-color:var(--line-strong)}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn-lg{padding:14px 24px;font-size:15.5px}
+.arrow{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:var(--accent)}
+.arrow svg{width:16px;height:16px;transition:.18s}
+.arrow:hover svg{transform:translateX(3px)}
+
+.view{padding:0}
+.view[hidden]{display:none!important}
+section.block{padding:64px 0}
+.center{text-align:center;max-width:720px;margin:0 auto}
+.sec-head{max-width:660px;margin-bottom:38px}
+.sec-head.center{margin-left:auto;margin-right:auto}
+h2.h{font-size:clamp(28px,4.4vw,44px)}
+.sec-head p{margin-top:14px;color:var(--ink-soft);font-size:18px}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--accent);
+  font-weight:700;font-size:13px;padding:7px 14px;border-radius:999px;border:1px solid #FBD9C8}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+
+/* hero */
+.hero{padding:44px 0 0;text-align:center}
+.founders{margin:0 auto 26px;max-width:470px;position:relative;border-radius:20px;overflow:hidden;
+  border:1px solid var(--line);box-shadow:var(--shadow-m)}
+.founders img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 46%}
+.founders figcaption{position:absolute;left:14px;bottom:14px;display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(6px);color:var(--ink);font-weight:700;font-size:14.5px;
+  padding:9px 15px;border-radius:999px;box-shadow:var(--shadow-s)}
+.founders .wave{font-size:16px}
+.hero h1{font-size:clamp(40px,6.2vw,74px);letter-spacing:-.03em;max-width:14ch;margin:22px auto 0}
+.hero h1 .b{color:var(--accent)}
+.hero .lead{max-width:600px;margin:22px auto 0;font-size:20px;color:var(--ink-soft)}
+.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+.hero-note{margin-top:16px;font-size:13.5px;color:var(--ink-faint)}
+
+/* dashboard mock */
+.dash-wrap{margin-top:52px;position:relative}
+.dash-wrap::before{content:"";position:absolute;left:50%;top:-30px;transform:translateX(-50%);
+  width:min(760px,90%);height:340px;background:radial-gradient(closest-side,rgba(255,90,34,.14),transparent);filter:blur(20px);z-index:0}
+.dash{position:relative;z-index:1;background:var(--card);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow-m);overflow:hidden;text-align:left}
+.dash-top{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+.dash-top .dots{display:flex;gap:6px}
+.dash-top .dots i{width:11px;height:11px;border-radius:50%;background:var(--line-strong);display:block}
+.dash-top .tt{font-weight:700;font-size:13.5px}
+.dash-top .tt span{color:var(--ink-faint);font-weight:500}
+.dash-top .live{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--good)}
+.dash-top .live i{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px rgba(31,157,87,.15)}
+.dash-media{position:relative;aspect-ratio:21/9;min-height:190px;overflow:hidden;border-bottom:1px solid var(--line)}
+.dash-media img{width:100%;height:100%;object-fit:cover;object-position:50% 42%}
+.dash-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,15,.06),rgba(10,12,15,.5))}
+.dash-play{position:absolute;top:14px;right:14px;z-index:2;width:46px;height:46px;border-radius:50%;border:0;cursor:pointer;
+  background:var(--accent);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.35);transition:transform .18s}
+.dash-play:hover{transform:scale(1.08)}
+.dash-play svg{width:18px;height:18px;fill:#fff;margin-left:2px}
+.dash-media-cap{position:absolute;left:18px;bottom:14px;z-index:2;color:#fff}
+.dash-media-cap .g{display:inline-block;font-size:11px;font-weight:700;background:var(--accent);color:#fff;padding:4px 10px;border-radius:999px;margin-bottom:9px}
+.dash-media-cap h3{font-size:22px;letter-spacing:-.02em;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+.dash-media-cap .reg{font-size:13px;font-weight:600;opacity:.92}
+.dash-body{display:grid;grid-template-columns:1.35fr 1fr;gap:0}
+.dash-main{padding:22px;border-right:1px solid var(--line)}
+.dash-side{padding:22px;display:flex;flex-direction:column;gap:18px}
+.dash-cap{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.dash-cap h3{font-size:20px;letter-spacing:-.02em}
+.dash-cap .badge{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border:1px solid #FBD9C8;padding:4px 9px;border-radius:999px}
+.dash-region{color:var(--ink-soft);font-size:13.5px;margin-bottom:14px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.metric{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-s);padding:12px 13px}
+.metric .v{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.metric .k{font-size:11px;font-weight:600;color:var(--ink-soft);margin-top:2px}
+.profile-label{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:8px}
+.profile{width:100%;height:120px;display:block}
+.terrain h4,.side h4{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px}
+.tbar{margin-bottom:11px}
+.tbar .row{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:5px}
+.tbar .row .p{color:var(--ink-soft);font-weight:700}
+.track{height:8px;border-radius:999px;background:var(--panel-2);overflow:hidden}
+.track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#FF7A46,var(--accent))}
+.passage-card{background:var(--accent-soft);border:1px solid #FBD9C8;border-radius:var(--r-s);padding:14px}
+.passage-card .t{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.03em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.passage-card p{font-size:13.5px;color:#7a3d24;margin-top:6px}
+
+/* trust strip */
+.trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel);margin-top:64px}
+.trust .in{display:flex;align-items:center;gap:26px;flex-wrap:wrap;justify-content:center;padding:20px 0}
+.trust .lbl{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+.trust .region{font-weight:700;font-size:15px;color:var(--ink-soft)}
+
+/* analyze cards */
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tri .c{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:var(--shadow-s)}
+.tri .ic{width:42px;height:42px;border-radius:11px;background:var(--accent-soft);display:grid;place-items:center;margin-bottom:16px}
+.tri .ic svg{width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:2}
+.tri h3{font-size:19px;margin-bottom:8px;letter-spacing:-.01em}
+.tri p{color:var(--ink-soft);font-size:15px}
+
+/* example wide card */
+.example{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-s);overflow:hidden;
+  display:grid;grid-template-columns:1fr 1.1fr}
+.example .ph{position:relative;min-height:230px}
+.example .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.example .ex-body{padding:26px}
+.example .ex-body .q{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint)}
+.example .ex-body h3{font-size:22px;margin:8px 0 16px}
+.exrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line)}
+.exrow .nm{font-weight:700}
+.exrow .badges{display:flex;gap:8px}
+.exbadge{font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--ink-soft)}
+.exbadge.hot{background:var(--accent-soft);border-color:#FBD9C8;color:var(--accent)}
+
+/* feature blocks */
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding:34px 0}
+.feat.rev .fx{order:2}
+.feat h3{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.02em}
+.feat p{color:var(--ink-soft);font-size:17px;margin-top:14px}
+.checks{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-direction:column;gap:10px}
+.checks li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px}
+.checks li svg{width:20px;height:20px;flex:0 0 auto;margin-top:2px;stroke:var(--accent);fill:none;stroke-width:2.2}
+.fx{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-m);background:var(--card)}
+.fx img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.fx.pad{padding:20px}
+.mini-ui{display:flex;flex-direction:column;gap:12px}
+.mini-ui .r{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-s);padding:12px 14px}
+.mini-ui .r .ico{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);display:grid;place-items:center;flex:0 0 auto}
+.mini-ui .r .ico svg{width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:2}
+.mini-ui .r .tx b{display:block;font-size:14.5px}
+.mini-ui .r .tx span{font-size:12.5px;color:var(--ink-soft)}
+.mini-ui .r .val{margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums}
+
+/* metrics band */
+.mband{background:var(--ink);border-radius:22px;padding:44px;color:#fff}
+.mband .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.mband .n{font-size:clamp(38px,5vw,58px);font-weight:800;letter-spacing:-.03em;color:#fff}
+.mband .n em{color:var(--accent);font-style:normal}
+.mband .l{color:rgba(255,255,255,.66);font-size:14.5px;margin-top:8px;font-weight:500}
+
+/* trails/camps reuse */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-s);
+  display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-m)}
+.thumb{position:relative;aspect-ratio:16/11;overflow:hidden;background:var(--panel-2)}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.card:hover .thumb img{transform:scale(1.05)}
+.thumb .play{position:absolute;inset:0;display:grid;place-items:center;border:0;background:transparent;cursor:pointer;z-index:2}
+.thumb .play span{width:54px;height:54px;border-radius:50%;background:var(--accent);display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.35);transition:transform .18s}
+.thumb .play:hover span{transform:scale(1.09)}
+.thumb .play svg{width:20px;height:20px;fill:#fff;margin-left:3px}
+.thumb .grade{position:absolute;left:12px;top:12px;z-index:2;font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.94);color:var(--ink)}
+.card-body{padding:20px;display:flex;flex-direction:column;gap:11px;flex:1}
+.card-body .region{font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--accent)}
+.card-body h3{font-size:19px;letter-spacing:-.01em}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--panel);color:var(--ink-soft);border:1px solid var(--line)}
+.passage{font-size:14px;color:var(--ink-soft)}
+.passage b{color:var(--ink);font-weight:700}
+.data-row{display:flex;gap:18px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px;margin-top:auto}
+.data-row .v{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums}
+.data-row .k{font-size:11px;font-weight:600;letter-spacing:.03em;color:var(--ink-soft)}
+
+.grid-camps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.camp{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-s);display:flex;flex-direction:column}
+.camp .top{position:relative;min-height:180px;padding:20px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end}
+.camp .top img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.camp .top::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,12,.1),rgba(10,10,12,.72))}
+.camp .top>*{position:relative;z-index:1}
+.camp .top .lvl{align-self:flex-start;font-size:11px;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--accent);color:#fff}
+.camp .top h3{font-size:22px;margin-top:10px}
+.camp .top .when{font-size:13px;font-weight:600;margin-top:4px;color:#eee}
+.camp .mid{padding:20px;display:flex;flex-direction:column;gap:13px;flex:1}
+.incl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.incl li{display:flex;gap:9px;align-items:flex-start;font-size:14px;color:var(--ink-soft)}
+.incl li svg{width:16px;height:16px;flex:0 0 auto;margin-top:3px;stroke:var(--accent);fill:none;stroke-width:2.4}
+.camp .foot{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-top:1px solid var(--line)}
+.camp .price .v{font-weight:800;font-size:22px}
+.camp .price .k{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft)}
+.spots{font-size:11.5px;font-weight:700;color:var(--good)}
+
+.itin{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;margin-top:26px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.day{background:var(--card);padding:18px}
+.day .d{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.day h4{font-size:16px;margin:8px 0 5px}
+.day p{font-size:13px;color:var(--ink-soft)}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:start}
+.about-photo{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-m);position:relative}
+.about-photo img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 32%}
+.about-photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:16px;color:#fff;font-weight:600;font-size:12.5px;background:linear-gradient(180deg,transparent,rgba(10,10,12,.78))}
+.lede p{font-size:18px}.lede p+p{margin-top:15px}
+.values{display:flex;flex-direction:column;gap:12px;margin-top:22px}
+.value{display:flex;gap:14px;align-items:flex-start}
+.value .ic{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);display:grid;place-items:center;flex:0 0 auto}
+.value .ic svg{width:19px;height:19px;stroke:var(--accent);fill:none;stroke-width:2}
+.value h4{font-size:16.5px;margin-bottom:3px}
+.value p{font-size:14.5px;color:var(--ink-soft)}
+
+/* faq */
+.faq{max-width:820px;margin:0 auto}
+.qa{border-bottom:1px solid var(--line)}
+.qa button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;background:none;border:0;
+  padding:20px 4px;text-align:left;cursor:pointer;font-family:var(--f);font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+.qa button .ic{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;transition:.2s}
+.qa button .ic svg{width:14px;height:14px;stroke:var(--ink);fill:none;stroke-width:2.2;transition:.2s}
+.qa.open button .ic{background:var(--accent);border-color:var(--accent)}
+.qa.open button .ic svg{stroke:#fff;transform:rotate(45deg)}
+.qa .a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.qa .a p{padding:0 4px 20px;color:var(--ink-soft);font-size:15.5px;max-width:70ch}
+
+/* contact */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+form{display:flex;flex-direction:column;gap:14px}
+label{font-size:12.5px;font-weight:700;color:var(--ink-soft);display:block;margin-bottom:6px}
+input,textarea,select{width:100%;font-family:var(--f);font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line-strong);border-radius:10px;padding:13px 14px}
+textarea{resize:vertical;min-height:130px}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.contact-info{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:28px}
+.contact-info .row{display:flex;flex-direction:column;gap:3px;padding:14px 0;border-bottom:1px solid var(--line)}
+.contact-info .row:last-child{border-bottom:0}
+.contact-info .row .k{font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint)}
+.contact-info .row a,.contact-info .row .v{font-size:17px;font-weight:500}
+
+/* final cta */
+.cta-band{background:var(--accent-soft);border:1px solid #FBD9C8;border-radius:24px;padding:56px;text-align:center}
+.cta-band h2{font-size:clamp(28px,4.4vw,44px)}
+.cta-band p{color:#8a4c30;margin:14px auto 0;max-width:520px;font-size:18px}
+.cta-band .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+
+/* footer */
+footer{border-top:1px solid var(--line);margin-top:70px;padding:56px 0 40px;background:var(--panel)}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+.foot .brand{margin-bottom:12px}
+.foot .tag{color:var(--ink-soft);font-size:14px;max-width:34ch}
+.foot h5{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 14px}
+.foot a{display:block;color:var(--ink-soft);font-size:14.5px;padding:5px 0;font-weight:500}
+.foot a:hover{color:var(--ink)}
+.foot-bottom{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-top:40px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-faint);font-size:13px}
+
+/* modal + toast */
+.modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:24px;background:rgba(10,12,15,.6);backdrop-filter:blur(4px)}
+.modal[open]{display:grid}
+.modal .box{background:var(--bg);border-radius:18px;max-width:600px;width:100%;overflow:hidden;box-shadow:var(--shadow-m)}
+.modal .scene{aspect-ratio:16/10;position:relative;background:var(--panel-2)}
+.modal .scene img{width:100%;height:100%;object-fit:cover}
+.modal .scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,12,.05),rgba(10,10,12,.45))}
+.modal .scene .badge{position:absolute;left:16px;bottom:16px;z-index:1;font-size:12px;font-weight:700;background:var(--accent);color:#fff;padding:6px 12px;border-radius:999px}
+.modal .t{padding:24px}
+.modal .t h3{font-size:22px}
+.modal .t p{color:var(--ink-soft);margin-top:8px;font-size:14.5px}
+.modal .t .close{margin-top:18px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
+  padding:13px 22px;border-radius:999px;font-weight:600;font-size:13.5px;box-shadow:var(--shadow-m);opacity:0;pointer-events:none;transition:.28s;z-index:120}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:900px){
+  nav.main{display:none}
+  nav.main.open{display:flex;position:absolute;top:66px;left:0;right:0;flex-direction:column;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px;gap:2px;margin:0}
+  .burger{display:grid}
+  .bar{gap:12px}
+  .ctrls{gap:8px}
+  .ctrls .btn-primary{display:none}
+  .seg{flex:0 0 auto}
+  .brand{font-size:18px}
+  .dash-body{grid-template-columns:1fr}.dash-main{border-right:0;border-bottom:1px solid var(--line)}
+  .tri,.grid-3,.grid-camps,.mband .grid{grid-template-columns:1fr}
+  .feat,.about-grid,.contact-grid,.example{grid-template-columns:1fr}
+  .feat.rev .fx{order:0}
+  .foot{grid-template-columns:1fr 1fr}
+  .example .ph{min-height:200px}
+}
+@media (max-width:560px){ .foot{grid-template-columns:1fr} .wrap{padding:0 18px} .mband,.cta-band,.dash-main,.dash-side{padding:24px} }
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.reveal{opacity:1;transform:none;transition:none}.card,.thumb img{transition:none}}
+</style>
+
+<div id="app">
+<header>
+  <div class="wrap bar">
+    <a href="#start" class="brand" data-nav>
+      <svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M2 27 L11 11 L16 19 L21 9 L30 27 Z" fill="var(--accent)"/><path d="M11 11 L14.5 17 L12.5 20 L8 20 Z" fill="rgba(255,255,255,.4)"/></svg>
+      Scout<b>your</b>Trail
+    </a>
+    <nav class="main" id="nav">
+      <a href="#start" data-nav data-i18n="nav.start">Start</a>
+      <a href="#trails" data-nav data-i18n="nav.trails">Trails</a>
+      <a href="#trailcamps" data-nav data-i18n="nav.camps">Trailcamps</a>
+      <a href="#ueber" data-nav data-i18n="nav.about">Über uns</a>
+      <a href="#kontakt" data-nav data-i18n="nav.contact">Kontakt</a>
+    </nav>
+    <div class="ctrls">
+      <div class="seg" role="group" aria-label="Sprache / Language">
+        <button id="lang-de" aria-pressed="true">DE</button>
+        <button id="lang-en" aria-pressed="false">EN</button>
+      </div>
+      <a href="#kontakt" data-nav class="btn btn-primary" data-i18n="nav.cta">Trailcamp anfragen</a>
+      <button class="burger" id="burger" aria-label="Menü"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ START ============ -->
+<section class="view" id="view-start">
+  <div class="wrap hero">
+    <figure class="founders reveal">
+      <img id="foundersImg" alt="Nils und Flora von ScoutyourTrail in der Gondel">
+      <figcaption><span class="wave">👋</span> <span data-i18n="intro.hi">Hi, wir sind Nils &amp; Flora</span></figcaption>
+    </figure>
+    <span class="pill reveal"><span class="dot"></span><span data-i18n="hero.badge">Trail-Recon für die Alpen</span></span>
+    <h1 class="reveal" data-i18n-html="hero.h1">Kenne den Trail, bevor du ihn <span class="b">läufst</span>.</h1>
+    <p class="lead reveal" data-i18n="hero.lead">Wir laufen und filmen jede Strecke – und zeigen dir Untergrund, Höhenprofil und jede Schlüsselpassage. Plus Trailcamp-Wochen mit Unterkunft, Verpflegung und geführten Läufen.</p>
+    <div class="cta reveal">
+      <a href="#trails" data-nav class="btn btn-primary btn-lg" data-i18n="hero.cta1">Trails ansehen</a>
+      <a href="#trailcamps" data-nav class="btn btn-ghost btn-lg" data-i18n="hero.cta2">Trailcamps entdecken</a>
+    </div>
+    <p class="hero-note reveal" data-i18n="hero.note">42 Trails gescoutet · Hohe Tauern · Kein Login nötig</p>
+
+    <div class="dash-wrap reveal">
+      <div class="dash">
+        <div class="dash-top">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="tt">Trail-Analyse <span>/ scoutyourtrail.com</span></div>
+          <div class="live"><i></i><span data-i18n="dash.live">Gescoutet</span></div>
+        </div>
+        <div class="dash-media">
+          <img id="dashImg" alt="Video-Vorschau vom Sonnblick-Anstieg">
+          <button class="dash-play" id="dashPlay" aria-label="Video ansehen"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div class="dash-media-cap"><span class="g">T3 · Profi</span><h3>Sonnblick-Anstieg</h3><div class="reg">Hohe Tauern · Österreich</div></div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-main">
+            <div class="metrics">
+              <div class="metric"><div class="v tnum">15,2 km</div><div class="k" data-i18n="dash.dist">Distanz</div></div>
+              <div class="metric"><div class="v tnum">1.180 m</div><div class="k" data-i18n="dash.climb">Höhenmeter</div></div>
+              <div class="metric"><div class="v tnum">4:10 h</div><div class="k" data-i18n="dash.time">Richtzeit</div></div>
+            </div>
+            <div class="profile-label"><span data-i18n="dash.profile">Höhenprofil</span><span class="tnum">2.030 – 3.020 m</span></div>
+            <svg class="profile" id="elev" viewBox="0 0 560 120" preserveAspectRatio="none" aria-hidden="true"></svg>
+          </div>
+          <div class="dash-side">
+            <div class="terrain">
+              <h4 data-i18n="dash.terrain">Untergrund</h4>
+              <div class="tbar"><div class="row"><span data-i18n="terr.fels">Fels</span><span class="p">42%</span></div><div class="track"><i style="width:42%"></i></div></div>
+              <div class="tbar"><div class="row"><span data-i18n="terr.schotter">Schotter</span><span class="p">28%</span></div><div class="track"><i style="width:28%"></i></div></div>
+              <div class="tbar"><div class="row"><span data-i18n="terr.firn">Firn</span><span class="p">18%</span></div><div class="track"><i style="width:18%"></i></div></div>
+              <div class="tbar"><div class="row"><span data-i18n="terr.wurzeln">Wurzeln</span><span class="p">12%</span></div><div class="track"><i style="width:12%"></i></div></div>
+            </div>
+            <div class="passage-card">
+              <div class="t"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg><span data-i18n="dash.passage">Schlüsselpassage</span></div>
+              <p data-i18n="dash.passtext">Steiler Blockgrat ab km 9 – bei Nässe volle Konzentration.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trust">
+    <div class="wrap in">
+      <span class="lbl" data-i18n="trust.lbl">Gescoutet in</span>
+      <span class="region">Hohe Tauern</span><span class="region">Stubachtal</span><span class="region">Ödenwinkel</span>
+      <span class="region">Weißsee</span><span class="region">Zillertal</span>
+    </div>
+  </div>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <p class="eyebrow" data-i18n="analyze.eyebrow">Was wir analysieren</p>
+        <h2 class="h" data-i18n="analyze.h2">Alles, was du vor dem Start wissen willst</h2>
+        <p data-i18n="analyze.p">Für jeden Trail werten wir drei Dinge aus – damit du nicht mehr ins Blaue läufst.</p>
+      </div>
+      <div class="tri">
+        <div class="c reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></div><h3 data-i18n="an.1.h">Streckenprofil</h3><p data-i18n="an.1.p">Distanz, Höhenmeter und Höhenprofil – wo es steil wird und wo du laufen lassen kannst.</p></div>
+        <div class="c reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19c4-1 6-3 8-8s4-7 8-8"/><circle cx="6" cy="18" r="1.6"/></svg></div><h3 data-i18n="an.2.h">Untergrund</h3><p data-i18n="an.2.p">Fels, Schotter, Wurzeln, Firn, Matsch – prozentgenau, damit du die richtigen Schuhe wählst.</p></div>
+        <div class="c reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg></div><h3 data-i18n="an.3.h">Schlüsselpassagen</h3><p data-i18n="an.3.p">Die kniffligen Stellen im Video markiert und erklärt – bevor du sie unter den Füßen hast.</p></div>
+      </div>
+
+      <div class="example reveal">
+        <div class="ph"><img id="exImg" alt="Beispiel-Trail"></div>
+        <div class="ex-body">
+          <div class="q" data-i18n="ex.q">Beispiel · Frisch gescoutet</div>
+          <h3>Granitschlucht-Pfad</h3>
+          <div class="exrow"><span class="nm" data-i18n="ex.r1">Untergrund</span><div class="badges"><span class="exbadge">Granit</span><span class="exbadge">Wasser</span><span class="exbadge hot">Schotter</span></div></div>
+          <div class="exrow"><span class="nm" data-i18n="ex.r2">Schwierigkeit</span><div class="badges"><span class="exbadge">T2 · Fortgeschritten</span></div></div>
+          <div class="exrow"><span class="nm" data-i18n="ex.r3">Schlüsselstelle</span><div class="badges"><span class="exbadge hot" data-i18n="ex.r3v">Granitplatten · km 7</span></div></div>
+          <div style="margin-top:18px"><a href="#trails" data-nav class="arrow" data-i18n="ex.link">Alle Trails ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="padding-top:20px">
+    <div class="wrap">
+      <div class="feat reveal">
+        <div class="ft">
+          <p class="eyebrow" data-i18n="f1.eyebrow">Trail-Videos</p>
+          <h3 data-i18n="f1.h">Sieh den Untergrund, bevor du ihn spürst</h3>
+          <p data-i18n="f1.p">Wir laufen jede Strecke selbst ab und filmen sie in voller Länge – ehrlich und ungeschönt. Du weißt vorher, worauf du dich einlässt.</p>
+          <ul class="checks">
+            <li><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg><span data-i18n="f1.c1">Volle Strecke im Video, nicht nur die schönen Stellen</span></li>
+            <li><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg><span data-i18n="f1.c2">Untergrund prozentgenau aufgeschlüsselt</span></li>
+            <li><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg><span data-i18n="f1.c3">Selbst gelaufen – keine Drohnen-Schönmalerei</span></li>
+          </ul>
+        </div>
+        <div class="fx"><img id="f1img" alt="Trail-Video-Vorschau"></div>
+      </div>
+
+      <div class="feat rev reveal">
+        <div class="fx">
+          <img id="f2img" alt="Schlüsselpassage im Video">
+          <div style="padding:18px">
+          <div class="mini-ui">
+            <div class="r"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg></div><div class="tx"><b data-i18n="m.1t">Blockgrat</b><span data-i18n="m.1s">Ausgesetzt · km 9</span></div><span class="val">T3</span></div>
+            <div class="r"><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 19c4-1 6-3 8-8s4-7 8-8"/></svg></div><div class="tx"><b data-i18n="m.2t">Bachquerung</b><span data-i18n="m.2s">Schmelzwasser · km 6</span></div><span class="val">T2</span></div>
+            <div class="r"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/></svg></div><div class="tx"><b data-i18n="m.3t">Almabfahrt</b><span data-i18n="m.3s">Flowig · km 11</span></div><span class="val">T1</span></div>
+          </div>
+          </div>
+        </div>
+        <div class="ft">
+          <p class="eyebrow" data-i18n="f2.eyebrow">Streckenanalyse</p>
+          <h3 data-i18n="f2.h">Jede Schlüsselpassage erklärt</h3>
+          <p data-i18n="f2.p">Die kniffligen Stellen markieren wir und sagen dir, worauf es ankommt – Trittsicherheit, Nässe, Ausgesetztheit. So läufst du sie mutiger und sicherer.</p>
+          <div style="margin-top:18px"><a href="#trails" data-nav class="arrow" data-i18n="f2.link">Zur Trail-Bibliothek <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+        </div>
+      </div>
+
+      <div class="feat reveal">
+        <div class="ft">
+          <p class="eyebrow" data-i18n="f3.eyebrow">Trailcamps</p>
+          <h3 data-i18n="f3.h">Eine Woche laufen – wir organisieren den Rest</h3>
+          <p data-i18n="f3.p">Sieben Tage in einer Trailregion: geführte Läufe für dein Level, Unterkunft, alle Mahlzeiten, Video-Analyse und Regeneration. Du brauchst nur deine Laufschuhe.</p>
+          <div style="margin-top:18px"><a href="#trailcamps" data-nav class="arrow" data-i18n="f3.link">Trailcamps 2026 ansehen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+        </div>
+        <div class="fx"><img id="f3img" alt="Trailcamp"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="padding-top:20px">
+    <div class="wrap">
+      <div class="mband reveal">
+        <div class="grid">
+          <div><div class="n tnum">42</div><div class="l" data-i18n="stat.1">Trails gescoutet</div></div>
+          <div><div class="n tnum">18.400</div><div class="l" data-i18n="stat.2">Höhenmeter gefilmt</div></div>
+          <div><div class="n tnum">4</div><div class="l" data-i18n="stat.3">Trailcamps 2026</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <p class="eyebrow" data-i18n="faq.eyebrow">FAQ</p>
+        <h2 class="h" data-i18n="faq.h2">Häufige Fragen</h2>
+      </div>
+      <div class="faq" id="faq"></div>
+    </div>
+  </section>
+
+  <section class="block" style="padding-top:0">
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <h2 data-i18n="cta.h2">Neue Trails zuerst sehen</h2>
+        <p data-i18n="cta.p">Jede Woche ein neu gescouteter Trail mit voller Streckenanalyse – direkt in dein Postfach.</p>
+        <div class="cta"><a href="#kontakt" data-nav class="btn btn-primary btn-lg" data-i18n="cta.btn">Kostenlos anmelden</a>
+          <a href="#trailcamps" data-nav class="btn btn-ghost btn-lg" data-i18n="cta.btn2">Trailcamp anfragen</a></div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ============ TRAILS ============ -->
+<section class="view" id="view-trails" hidden>
+  <section class="block"><div class="wrap">
+    <div class="sec-head reveal"><p class="eyebrow" data-i18n="trails.eyebrow">Die Trail-Bibliothek</p>
+      <h2 class="h" data-i18n="trails.h2">Jeder Meter gescoutet</h2>
+      <p data-i18n="trails.p">Gefilmt, vermessen, beschrieben. Filtere nach Untergrund und schau dir das Video an, bevor du losläufst.</p></div>
+    <div class="tags reveal" id="filters" style="margin-bottom:26px"></div>
+    <div class="grid-3" id="allTrails"></div>
+  </div></section>
+</section>
+
+<!-- ============ TRAILCAMPS ============ -->
+<section class="view" id="view-trailcamps" hidden>
+  <section class="block"><div class="wrap">
+    <div class="sec-head reveal"><p class="eyebrow" data-i18n="camps.eyebrow">Eine Woche nur laufen</p>
+      <h2 class="h" data-i18n="camps.h2">Trailcamp-Wochen 2026</h2>
+      <p data-i18n="camps.p">Sieben Tage in einer Trailregion. Wir haben die Strecken vorab gescoutet, führen dich sicher durch jede Passage und organisieren Unterkunft, Essen und Regeneration.</p></div>
+    <div class="grid-camps" id="campGrid"></div>
+    <div style="margin-top:56px">
+      <div class="sec-head reveal"><p class="eyebrow" data-i18n="itin.eyebrow">So läuft eine Woche</p><h2 class="h" data-i18n="itin.h2">Dein Camp, Tag für Tag</h2></div>
+      <div class="itin reveal" id="itin"></div>
+    </div>
+    <div style="margin-top:48px"><div class="cta-band reveal">
+      <h2 data-i18n="camps.band.h2">Alles inklusive – außer der Anreise</h2>
+      <p data-i18n="camps.band.p">Unterkunft, alle Mahlzeiten, geführte Läufe, Video-Streckenanalyse, Regeneration und Transfers vor Ort.</p>
+      <div class="cta"><a href="#kontakt" data-nav class="btn btn-primary btn-lg" data-i18n="camps.band.btn">Platz anfragen</a></div>
+    </div></div>
+  </div></section>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="view" id="view-ueber" hidden>
+  <section class="block"><div class="wrap">
+    <div class="sec-head reveal"><p class="eyebrow" data-i18n="about.eyebrow">Über uns</p><h2 class="h" data-i18n="about.h2">Wir laufen vor, damit du weißt, was kommt</h2></div>
+    <div class="about-grid">
+      <div class="lede reveal">
+        <p data-i18n="about.p1">ScoutyourTrail ist aus einer einfachen Frustration entstanden: Zu oft standen wir vor einer unbekannten Strecke, ohne zu wissen, was uns erwartet – wie technisch die Abfahrt ist, ob der Untergrund nach Regen hält, wo die Schlüsselstelle kommt.</p>
+        <p data-i18n="about.p2">Also haben wir angefangen, Trails selbst abzulaufen und zu filmen. Meter für Meter, ehrlich und ungeschönt. Heute teilen wir diese Aufnahmen mit einer Community von Trailrunnern – und nehmen sie in unseren Trailcamps mit auf die schönsten Strecken.</p>
+        <div class="values reveal">
+          <div class="value"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 6"/></svg></div><div><h4 data-i18n="value.1.h">Ehrlich gefilmt</h4><p data-i18n="value.1.p">Wir zeigen die Strecke, wie sie ist – inklusive der Stellen, die wehtun.</p></div></div>
+          <div class="value"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19c4-1 6-3 8-8s4-7 8-8"/></svg></div><div><h4 data-i18n="value.2.h">Selbst gelaufen</h4><p data-i18n="value.2.p">Jeden Trail, den wir zeigen, sind wir selbst gelaufen. Keine Ausnahmen.</p></div></div>
+          <div class="value"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M22 21v-2a4 4 0 0 0-3-3.8"/></svg></div><div><h4 data-i18n="value.3.h">Für die Community</h4><p data-i18n="value.3.p">Wissen teilen statt zurückhalten. Damit alle sicherer und mutiger laufen.</p></div></div>
+        </div>
+      </div>
+      <figure class="about-photo reveal" style="margin:0"><img id="teamImg" alt="Das ScoutyourTrail-Team unterwegs"><figcaption data-i18n="about.cap">Das Team unterwegs – irgendwo zwischen Gletscher und nächstem Stroopwafel.</figcaption></figure>
+    </div>
+  </div></section>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="view" id="view-kontakt" hidden>
+  <section class="block"><div class="wrap">
+    <div class="sec-head reveal"><p class="eyebrow" data-i18n="contact.eyebrow">Kontakt</p><h2 class="h" data-i18n="contact.h2">Schreib uns</h2>
+      <p data-i18n="contact.p">Frage zu einem Trailcamp, Wunsch für eine gescoutete Strecke oder einfach Hallo – wir melden uns.</p></div>
+    <div class="contact-grid">
+      <form id="contactForm" novalidate>
+        <div><label for="name" data-i18n="form.name">Name</label><input id="name" type="text" data-i18n-ph="form.name.ph" placeholder="Dein Name" required></div>
+        <div><label for="email" data-i18n="form.email">E-Mail</label><input id="email" type="email" data-i18n-ph="form.email.ph" placeholder="du@beispiel.de" required></div>
+        <div><label for="topic" data-i18n="form.topic">Thema</label><select id="topic">
+          <option data-i18n="form.topic.1">Trailcamp-Anfrage</option><option data-i18n="form.topic.2">Trail vorschlagen</option>
+          <option data-i18n="form.topic.3">Zusammenarbeit</option><option data-i18n="form.topic.4">Sonstiges</option></select></div>
+        <div><label for="msg" data-i18n="form.msg">Nachricht</label><textarea id="msg" data-i18n-ph="form.msg.ph" placeholder="Worum geht's?" required></textarea></div>
+        <button type="submit" class="btn btn-primary btn-lg" data-i18n="form.send">Nachricht senden</button>
+      </form>
+      <div class="contact-info reveal">
+        <div class="row"><span class="k" data-i18n="info.email">E-Mail</span><a href="mailto:hallo@scoutyourtrail.com">hallo@scoutyourtrail.com</a></div>
+        <div class="row"><span class="k" data-i18n="info.web">Web</span><span class="v">scoutyourtrail.com</span></div>
+        <div class="row"><span class="k" data-i18n="info.social">Social</span><span class="v">@scoutyourtrail</span></div>
+        <div class="row"><span class="k" data-i18n="info.camps">Trailcamps 2026</span><span class="v" data-i18n="info.camps.v">Noch Plätze frei – jetzt anfragen</span></div>
+      </div>
+    </div>
+  </div></section>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#start" data-nav class="brand"><svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M2 27 L11 11 L16 19 L21 9 L30 27 Z" fill="var(--accent)"/></svg>Scout<b>your</b>Trail</a>
+        <p class="tag" data-i18n="foot.tag">Kenne den Trail, bevor du läufst. Trail-Recon &amp; Trailcamps in den Alpen.</p>
+      </div>
+      <div><h5 data-i18n="foot.h1">Entdecken</h5>
+        <a href="#trails" data-nav data-i18n="nav.trails">Trails</a>
+        <a href="#trailcamps" data-nav data-i18n="nav.camps">Trailcamps</a>
+        <a href="#ueber" data-nav data-i18n="nav.about">Über uns</a></div>
+      <div><h5 data-i18n="foot.h2">Mehr</h5>
+        <a href="#kontakt" data-nav data-i18n="nav.contact">Kontakt</a>
+        <a href="#kontakt" data-nav data-i18n="foot.news">Newsletter</a>
+        <a href="#faq" data-nav data-i18n="foot.faq">FAQ</a></div>
+      <div><h5 data-i18n="foot.h3">Kontakt</h5>
+        <a href="mailto:hallo@scoutyourtrail.com">hallo@scoutyourtrail.com</a>
+        <a href="#">@scoutyourtrail</a></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 ScoutyourTrail</span><span data-i18n="foot.made">Gebaut in den Bergen 🏔</span></div>
+  </div>
+</footer>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="box"><div class="scene"><img id="modalImg" alt=""><span class="badge" id="modalBadge">Video</span></div>
+    <div class="t"><h3 id="modalTitle">Trail</h3>
+      <p data-i18n="modal.p">Das Streckenvideo wird hier abgespielt. Sobald ScoutyourTrail live ist, siehst du an dieser Stelle die volle Trail-Aufnahme mit Untergrund- und Passagen-Analyse.</p>
+      <button class="btn btn-ghost close" id="modalClose" data-i18n="modal.close">Schließen</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>window.IMG={"hero": "images/hero.jpg", "team": "images/team.jpg", "team2": "images/team2.jpg", "t1": "images/t1.jpg", "t2": "images/t2.jpg", "t3": "images/t3.jpg", "t4": "images/t4.jpg", "t5": "images/t5.jpg", "t6": "images/t6.jpg", "sheep": "images/sheep.jpg"};</script>
+<script>
+const trails=[
+  {img:'t1',n:'Sonnblick-Anstieg',ne:'Sonnblick Ascent',r:'Hohe Tauern · AT',km:15.2,dp:1180,g:'T3 · Profi',ge:'T3 · Expert',terr:['Fels','Schotter','Firn'],terrE:['Rock','Gravel','Firn'],pass:'Steiler Blockgrat ab km 9 – bei Nässe volle Konzentration.',passE:'Steep boulder ridge from km 9 – full focus when wet.'},
+  {img:'t2',n:'Farnwald-Steig',ne:'Fern Forest Trail',r:'Stubachtal · AT',km:9.4,dp:430,g:'T1 · Einsteiger',ge:'T1 · Beginner',terr:['Waldboden','Wurzeln','Alm'],terrE:['Soft trail','Roots','Meadow'],pass:'Weicher Almboden, hüfthohes Grün ab km 3 – ideal zum Reinkommen.',passE:'Soft meadow ground, hip-high green from km 3 – ideal to ease in.'},
+  {img:'t3',n:'Granitschlucht-Pfad',ne:'Granite Gorge Path',r:'Ödenwinkel · AT',km:12.6,dp:720,g:'T2 · Fortgeschritten',ge:'T2 · Intermediate',terr:['Granit','Wasser','Schotter'],terrE:['Granite','Water','Gravel'],pass:'Schmaler Pfad über glatte Granitplatten am Gletscherbach – bei km 7.',passE:'Narrow path over smooth granite slabs by the glacial stream – at km 7.'},
+  {img:'t4',n:'Gletscherbach-Runde',ne:'Glacier Stream Loop',r:'Weißsee · AT',km:11.8,dp:560,g:'T2 · Fortgeschritten',ge:'T2 · Intermediate',terr:['Alm','Wasser','Schotter'],terrE:['Meadow','Water','Gravel'],pass:'Offene Bachquerung bei km 6 – kaltes Schmelzwasser, sicherer Tritt nötig.',passE:'Open stream crossing at km 6 – cold meltwater, sure footing needed.'},
+  {img:'t6',n:'Wasserfall-Kehren',ne:'Waterfall Switchbacks',r:'Stubachtal · AT',km:13.9,dp:1040,g:'T3 · Profi',ge:'T3 · Expert',terr:['Fels','Steig','Wasser'],terrE:['Rock','Steep path','Water'],pass:'Enge, feuchte Kehren direkt neben dem Wasserfall – ab km 8.',passE:'Tight, damp switchbacks right beside the waterfall – from km 8.'},
+  {img:'sheep',n:'Almrosen-Traverse',ne:'Alpine Rose Traverse',r:'Hohe Tauern · AT',km:16.5,dp:880,g:'T2 · Fortgeschritten',ge:'T2 · Intermediate',terr:['Alm','Wurzeln','Schotter'],terrE:['Meadow','Roots','Gravel'],pass:'Weidegebiet mit Schafen bei km 10 – ruhig durchlaufen, Hunde anleinen.',passE:'Grazing pasture with sheep at km 10 – pass calmly, leash dogs.'}
+];
+const camps=[
+  {img:'hero',n:'Weißsee Gletscherwelt',ne:'Weißsee Glacier Week',lvl:'Fortgeschritten',lvlE:'Intermediate',when:'21.–28. Juni 2026',whenE:'Jun 21–28, 2026',price:'1.290 €',spots:'6 / 10 Plätze frei',spotsE:'6 / 10 spots left'},
+  {img:'t5',n:'Ödenwinkel-Woche',ne:'Ödenwinkel Week',lvl:'Alle Level',lvlE:'All levels',when:'12.–19. Juli 2026',whenE:'Jul 12–19, 2026',price:'1.140 €',spots:'8 / 10 Plätze frei',spotsE:'8 / 10 spots left'},
+  {img:'team',n:'Stubachtal-Woche',ne:'Stubachtal Week',lvl:'Einsteiger',lvlE:'Beginner',when:'6.–13. September 2026',whenE:'Sep 6–13, 2026',price:'980 €',spots:'3 / 10 Plätze frei',spotsE:'3 / 10 spots left'}
+];
+const inclKeys=['Unterkunft (7 Nächte)','Alle Mahlzeiten','Geführte Läufe','Video-Streckenanalyse','Regeneration & Mobility','Transfers vor Ort'];
+const inclKeysE=['Accommodation (7 nights)','All meals','Guided runs','Video route analysis','Recovery & mobility','Local transfers'];
+const days=[{d:'Tag 1',t:'Ankunft',p:'Check-in, lockerer Einlauf-Trail und Team-Dinner.'},{d:'Tag 2',t:'Grundlagen',p:'Technik-Session am Berg: Bergauf, Bergab, Untergrund lesen.'},{d:'Tag 3',t:'Long Run',p:'Die große gescoutete Runde mit allen Schlüsselpassagen.'},{d:'Tag 4',t:'Recovery',p:'Kurzer Shakeout, Mobility und Video-Analyse vom Vortag.'},{d:'Tag 5',t:'Peak Day',p:'Highlight-Trail zum Gipfel – der Tag, für den du kommst.'},{d:'Tag 6',t:'Flow',p:'Schnelle, flowige Strecke – Laufen lassen und genießen.'},{d:'Tag 7',t:'Abschied',p:'Sunrise-Run, Brunch und Abreise.'}];
+const daysE=[{d:'Day 1',t:'Arrival',p:'Check-in, easy shakeout trail and team dinner.'},{d:'Day 2',t:'Fundamentals',p:'Technique session on the mountain: climbing, descending, reading terrain.'},{d:'Day 3',t:'Long Run',p:'The big scouted loop with every key passage.'},{d:'Day 4',t:'Recovery',p:'Short shakeout, mobility and video analysis of the day before.'},{d:'Day 5',t:'Peak Day',p:'Highlight trail to the summit – the day you came for.'},{d:'Day 6',t:'Flow',p:'Fast, flowing route – let go and enjoy.'},{d:'Day 7',t:'Farewell',p:'Sunrise run, brunch and departure.'}];
+const faqDE=[
+  ['Sind die Videos kostenlos?','Ja. Die gescouteten Trails mit Video und Streckenanalyse sind frei zugänglich – kein Login, kein Abo. Wir wollen, dass alle sicherer laufen.'],
+  ['Für welche Region sind die Trails?','Aktuell scouten wir vor allem in den Hohen Tauern und Umgebung (Stubachtal, Ödenwinkel, Weißsee, Zillertal). Wir erweitern laufend – Wünsche gern per Kontakt.'],
+  ['Für wen sind die Trailcamps geeignet?','Für alle Level. Jedes Camp hat eine Einstufung (Einsteiger bis Profi), und wir bilden vor Ort Gruppen nach Tempo und Erfahrung.'],
+  ['Was ist in einem Trailcamp enthalten?','Unterkunft für 7 Nächte, alle Mahlzeiten, geführte Läufe, Video-Streckenanalyse, Regeneration und Transfers vor Ort. Nur die Anreise organisierst du selbst.'],
+  ['Wie kann ich einen Trail vorschlagen?','Schreib uns über das Kontaktformular oder an hallo@scoutyourtrail.com – wir nehmen Vorschläge in unsere Scouting-Liste auf.']
+];
+const faqEN=[
+  ['Are the videos free?','Yes. The scouted trails with video and route analysis are free to access – no login, no subscription. We want everyone to run safer.'],
+  ['Which region are the trails in?','Right now we mainly scout in the Hohe Tauern and nearby (Stubachtal, Ödenwinkel, Weißsee, Zillertal). We keep expanding – send requests via contact.'],
+  ['Who are the trailcamps for?','All levels. Every camp has a rating (beginner to expert) and we form groups on site by pace and experience.'],
+  ['What is included in a trailcamp?','Accommodation for 7 nights, all meals, guided runs, video route analysis, recovery and local transfers. You only arrange your own travel there.'],
+  ['How can I suggest a trail?','Write to us via the contact form or hallo@scoutyourtrail.com – we add suggestions to our scouting list.']
+];
+const EN={
+  'nav.start':'Home','nav.trails':'Trails','nav.camps':'Trailcamps','nav.about':'About','nav.contact':'Contact','nav.cta':'Request a camp',
+  'intro.hi':'Hi, we’re Nils & Flora',
+  'hero.badge':'Trail recon for the Alps',
+  'hero.h1':'Know the trail before you <span class="b">run it</span>.',
+  'hero.lead':'We run and film every route – showing you the surface, the elevation profile and every key passage. Plus trailcamp weeks with lodging, meals and guided runs.',
+  'hero.cta1':'Browse trails','hero.cta2':'Explore trailcamps','hero.note':'42 trails scouted · Hohe Tauern · No login needed',
+  'dash.live':'Scouted','dash.dist':'Distance','dash.climb':'Climb','dash.time':'Est. time','dash.profile':'Elevation profile',
+  'dash.terrain':'Surface','dash.passage':'Key passage','dash.passtext':'Steep boulder ridge from km 9 – full focus when wet.',
+  'terr.fels':'Rock','terr.schotter':'Gravel','terr.firn':'Firn','terr.wurzeln':'Roots',
+  'trust.lbl':'Scouted in',
+  'analyze.eyebrow':'What we analyse','analyze.h2':'Everything you want to know before you start','analyze.p':'For every trail we break down three things – so you never run in blind again.',
+  'an.1.h':'Route profile','an.1.p':'Distance, climb and elevation profile – where it gets steep and where you can let it run.',
+  'an.2.h':'Surface','an.2.p':'Rock, gravel, roots, firn, mud – to the percent, so you pick the right shoes.',
+  'an.3.h':'Key passages','an.3.p':'The tricky spots marked and explained in the video – before you have them underfoot.',
+  'ex.q':'Example · Freshly scouted','ex.r1':'Surface','ex.r2':'Difficulty','ex.r3':'Crux','ex.r3v':'Granite slabs · km 7','ex.link':'Browse all trails',
+  'f1.eyebrow':'Trail videos','f1.h':'See the surface before you feel it','f1.p':'We run every route ourselves and film it end to end – honest and unpolished. You know what you are getting into.',
+  'f1.c1':'The full route on video, not just the pretty parts','f1.c2':'Surface broken down to the percent','f1.c3':'Actually run – no flattering drone shots',
+  'f2.eyebrow':'Route analysis','f2.h':'Every key passage explained','f2.p':'We mark the tricky spots and tell you what matters – footing, wet rock, exposure. So you run them bolder and safer.','f2.link':'To the trail library',
+  'm.1t':'Boulder ridge','m.1s':'Exposed · km 9','m.2t':'Stream crossing','m.2s':'Meltwater · km 6','m.3t':'Meadow descent','m.3s':'Flowy · km 11',
+  'f3.eyebrow':'Trailcamps','f3.h':'Run for a week – we organise the rest','f3.p':'Seven days in one trail region: guided runs for your level, lodging, all meals, video analysis and recovery. All you need are your running shoes.','f3.link':'See trailcamps 2026',
+  'stat.1':'trails scouted','stat.2':'metres of climb filmed','stat.3':'trailcamps in 2026',
+  'faq.eyebrow':'FAQ','faq.h2':'Frequently asked questions',
+  'trails.eyebrow':'The trail library','trails.h2':'Every metre scouted','trails.p':'Filmed, measured, described. Filter by surface and watch the video before you set off.',
+  'camps.eyebrow':'A week of pure running','camps.h2':'Trailcamp weeks 2026','camps.p':'Seven days in one trail region. We scouted the routes in advance, guide you safely through every passage and organise lodging, food and recovery.',
+  'itin.eyebrow':'How a week runs','itin.h2':'Your camp, day by day',
+  'camps.band.h2':'All in – except getting there','camps.band.p':'Lodging, all meals, guided runs, video route analysis, recovery and local transfers.','camps.band.btn':'Request a spot',
+  'about.eyebrow':'About us','about.h2':'We run ahead so you know what’s coming',
+  'about.p1':'ScoutyourTrail grew out of a simple frustration: too often we stood at the start of an unknown route with no idea what was ahead – how technical the descent was, whether the ground would hold after rain, where the crux would come.',
+  'about.p2':'So we started running and filming trails ourselves. Metre by metre, honest and unpolished. Today we share those recordings with a community of trail runners – and take them along to the finest routes on our trailcamps.',
+  'about.cap':'The team out there – somewhere between glacier and the next stroopwafel.',
+  'value.1.h':'Honestly filmed','value.1.p':'We show the route as it is – including the parts that hurt.',
+  'value.2.h':'Actually run','value.2.p':'Every trail we show, we ran ourselves. No exceptions.',
+  'value.3.h':'For the community','value.3.p':'Sharing knowledge instead of hoarding it. So everyone runs safer and bolder.',
+  'contact.eyebrow':'Contact','contact.h2':'Write to us','contact.p':'A question about a trailcamp, a route you’d like scouted, or just hello – we’ll get back to you.',
+  'form.name':'Name','form.name.ph':'Your name','form.email':'Email','form.email.ph':'you@example.com','form.topic':'Topic',
+  'form.topic.1':'Trailcamp enquiry','form.topic.2':'Suggest a trail','form.topic.3':'Collaboration','form.topic.4':'Other',
+  'form.msg':'Message','form.msg.ph':'What’s on your mind?','form.send':'Send message',
+  'info.email':'Email','info.web':'Web','info.social':'Social','info.camps':'Trailcamps 2026','info.camps.v':'Spots still open – enquire now',
+  'cta.h2':'See new trails first','cta.p':'Every week, a newly scouted trail with full route analysis – straight to your inbox.','cta.btn':'Sign up free','cta.btn2':'Request a camp',
+  'foot.tag':'Know the trail before you run it. Trail recon & trailcamps in the Alps.',
+  'foot.h1':'Explore','foot.h2':'More','foot.h3':'Contact','foot.news':'Newsletter','foot.faq':'FAQ','foot.made':'Built in the mountains 🏔',
+  'modal.p':'The route video plays here. Once ScoutyourTrail is live, you’ll see the full trail recording with surface and passage analysis in this spot.','modal.close':'Close'
+};
+const RT={'trail.watch':'Ansehen','trail.km':'Distanz','trail.dp':'Höhenmeter','trail.passage':'Schlüsselpassage','camp.from':'ab','filter.all':'Alle'};
+const EN2={'trail.watch':'Watch','trail.km':'Distance','trail.dp':'Climb','trail.passage':'Key passage','camp.from':'from','filter.all':'All'};
+let lang='de';
+function t(k){return lang==='en'?(EN[k]??EN2[k]??RT[k]??k):(RT[k]??k);}
+function img(k){return (window.IMG&&window.IMG[k])||'';}
+
+function initI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.dataset._de=el.textContent);
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>el.dataset._de=el.innerHTML);
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>el.dataset._de=el.getAttribute('placeholder'));
+}
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');el.textContent=lang==='en'?(EN[k]??el.dataset._de):el.dataset._de;});
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{const k=el.getAttribute('data-i18n-html');el.innerHTML=lang==='en'?(EN[k]??el.dataset._de):el.dataset._de;});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.getAttribute('data-i18n-ph');el.setAttribute('placeholder',lang==='en'?(EN[k]??el.dataset._de):el.dataset._de);});
+  document.getElementById('lang-de').setAttribute('aria-pressed',lang==='de');
+  document.getElementById('lang-en').setAttribute('aria-pressed',lang==='en');
+  renderDynamic(); buildFAQ();
+}
+function setLang(l){lang=l;try{localStorage.setItem('sytv3-lang',l)}catch(e){}applyLang();}
+
+function trailCard(tr,i){
+  const terr=lang==='en'?tr.terrE:tr.terr;
+  return `<article class="card reveal"><div class="thumb"><img loading="lazy" src="${img(tr.img)}" alt="${lang==='en'?tr.ne:tr.n}">
+    <span class="grade">${lang==='en'?tr.ge:tr.g}</span>
+    <button class="play" data-play="${i}" aria-label="${t('trail.watch')}"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button></div>
+    <div class="card-body"><span class="region">${tr.r}</span><h3>${lang==='en'?tr.ne:tr.n}</h3>
+    <div class="tags">${terr.map(x=>`<span class="tag">${x}</span>`).join('')}</div>
+    <p class="passage"><b>${t('trail.passage')}:</b> ${lang==='en'?tr.passE:tr.pass}</p>
+    <div class="data-row"><div><div class="v tnum">${tr.km.toLocaleString(lang==='en'?'en':'de')} km</div><div class="k">${t('trail.km')}</div></div>
+    <div><div class="v tnum">${tr.dp.toLocaleString(lang==='en'?'en':'de')} m</div><div class="k">${t('trail.dp')}</div></div></div></div></article>`;
+}
+let activeFilter='__all';
+function renderTrails(){
+  const all=document.getElementById('allTrails');
+  if(all){const list=activeFilter==='__all'?trails:trails.filter(tr=>tr.terr.includes(activeFilter)||tr.terrE.includes(activeFilter));
+    all.innerHTML=list.map(tr=>trailCard(tr,trails.indexOf(tr))).join('');}
+  const fbox=document.getElementById('filters');
+  if(fbox){const set=new Set();trails.forEach(tr=>(lang==='en'?tr.terrE:tr.terr).forEach(x=>set.add(x)));
+    fbox.innerHTML=['__all',...set].map(o=>{const lbl=o==='__all'?t('filter.all'):o;const on=activeFilter===o;
+      return `<button class="tag" data-filter="${o}" style="cursor:pointer;${on?'background:var(--accent);color:#fff;border-color:transparent':''}">${lbl}</button>`;}).join('');}
+  bindPlays(); observeReveal();
+}
+function renderCamps(){
+  const grid=document.getElementById('campGrid');
+  if(grid){grid.innerHTML=camps.map(cp=>{
+    const incl=(lang==='en'?inclKeysE:inclKeys).map(x=>`<li><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>${x}</li>`).join('');
+    return `<article class="camp reveal"><div class="top"><img loading="lazy" src="${img(cp.img)}" alt="${lang==='en'?cp.ne:cp.n}">
+      <span class="lvl">${lang==='en'?cp.lvlE:cp.lvl}</span><h3>${lang==='en'?cp.ne:cp.n}</h3><span class="when">${lang==='en'?cp.whenE:cp.when}</span></div>
+      <div class="mid"><ul class="incl">${incl}</ul></div>
+      <div class="foot"><div class="price"><div class="k">${t('camp.from')}</div><div class="v tnum">${cp.price}</div></div>
+      <span class="spots">${lang==='en'?cp.spotsE:cp.spots}</span></div></article>`;}).join('');}
+  const it=document.getElementById('itin');
+  if(it)it.innerHTML=(lang==='en'?daysE:days).map(d=>`<div class="day"><div class="d">${d.d}</div><h4>${d.t}</h4><p>${d.p}</p></div>`).join('');
+  observeReveal();
+}
+function renderDynamic(){renderTrails();renderCamps();}
+
+function buildFAQ(){
+  const box=document.getElementById('faq'); if(!box)return;
+  const data=lang==='en'?faqEN:faqDE;
+  box.innerHTML=data.map((qa,i)=>`<div class="qa"><button aria-expanded="false" data-qa="${i}"><span>${qa[0]}</span>
+    <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="a"><p>${qa[1]}</p></div></div>`).join('');
+  box.querySelectorAll('[data-qa]').forEach(btn=>btn.onclick=()=>{
+    const qa=btn.closest('.qa'); const a=qa.querySelector('.a'); const open=qa.classList.contains('open');
+    box.querySelectorAll('.qa').forEach(x=>{x.classList.remove('open');x.querySelector('.a').style.maxHeight=null;x.querySelector('button').setAttribute('aria-expanded','false');});
+    if(!open){qa.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';btn.setAttribute('aria-expanded','true');}
+  });
+}
+
+function bindPlays(){
+  document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>{
+    const tr=trails[parseInt(b.dataset.play,10)];
+    document.getElementById('modalTitle').textContent=lang==='en'?tr.ne:tr.n;
+    document.getElementById('modalBadge').textContent=lang==='en'?tr.ge:tr.g;
+    document.getElementById('modalImg').src=img(tr.img);
+    document.getElementById('modal').setAttribute('open','');
+  });
+}
+document.getElementById('modalClose').onclick=()=>document.getElementById('modal').removeAttribute('open');
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.removeAttribute('open');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('modal').removeAttribute('open');});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(b){activeFilter=b.dataset.filter;renderTrails();}});
+
+const views=['start','trails','trailcamps','ueber','kontakt'];
+function go(v){
+  if(!views.includes(v))v='start';
+  views.forEach(x=>document.getElementById('view-'+x).hidden=x!==v);
+  document.querySelectorAll('nav.main a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+v));
+  document.getElementById('nav').classList.remove('open');
+  window.scrollTo({top:0,behavior:'auto'}); observeReveal();
+}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-nav]');if(!a)return;
+  const v=a.getAttribute('href').slice(1);if(!views.includes(v))return;e.preventDefault();history.replaceState(null,'','#'+v);go(v);});
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+document.getElementById('burger').onclick=()=>document.getElementById('nav').classList.toggle('open');
+
+document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDefault();
+  const ok=e.target.checkValidity();
+  const msg=lang==='en'?(ok?'Thanks! We’ll be in touch soon.':'Please fill in all fields.'):(ok?'Danke! Wir melden uns bald.':'Bitte fülle alle Felder aus.');
+  showToast(msg);if(ok)e.target.reset();});
+let toastT;function showToast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),3200);}
+
+let io;function observeReveal(){
+  if(!('IntersectionObserver' in window)){document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));return;}
+  if(!io)io=new IntersectionObserver(ents=>ents.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}}),{threshold:.08});
+  document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
+}
+function drawElev(){
+  const svg=document.getElementById('elev'); if(!svg)return;
+  const W=560,H=120, pts=[0.06,0.10,0.14,0.20,0.30,0.42,0.55,0.63,0.70,0.66,0.74,0.86,0.95,1.0,0.9,0.78,0.7,0.6,0.52,0.4,0.3,0.22,0.16,0.12];
+  const n=pts.length, dx=W/(n-1);
+  let d=`M 0 ${H-pts[0]*(H-16)-6}`;
+  for(let i=1;i<n;i++){d+=` L ${(i*dx).toFixed(1)} ${(H-pts[i]*(H-16)-6).toFixed(1)}`;}
+  const area=d+` L ${W} ${H} L 0 ${H} Z`;
+  // peak marker
+  let pi=0;pts.forEach((v,i)=>{if(v>pts[pi])pi=i;});
+  const px=pi*dx, py=H-pts[pi]*(H-16)-6;
+  svg.innerHTML=`<defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="var(--accent)" stop-opacity="0.28"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area}" fill="url(#eg)"/><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="4.5" fill="var(--accent)" stroke="#fff" stroke-width="2"/>`;
+}
+
+document.getElementById('foundersImg').src=img('team2');
+document.getElementById('teamImg').src=img('t5');
+document.getElementById('exImg').src=img('t3');
+document.getElementById('f1img').src=img('t2');
+document.getElementById('f2img').src=img('t6');
+document.getElementById('f3img').src=img('t5');
+document.getElementById('dashImg').src=img('hero');
+document.getElementById('dashPlay').onclick=()=>{
+  document.getElementById('modalTitle').textContent='Sonnblick-Anstieg';
+  document.getElementById('modalBadge').textContent=lang==='en'?'T3 · Expert':'T3 · Profi';
+  document.getElementById('modalImg').src=img('hero');
+  document.getElementById('modal').setAttribute('open','');
+};
+initI18n();
+try{const l=localStorage.getItem('sytv3-lang');if(l)lang=l;}catch(e){}
+applyLang();
+go(views.includes(location.hash.slice(1))?location.hash.slice(1):'start');
+drawElev(); observeReveal();
+document.getElementById('lang-de').onclick=()=>setLang('de');
+document.getElementById('lang-en').onclick=()=>setLang('en');
+</script>
